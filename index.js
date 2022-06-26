@@ -36,6 +36,31 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
             const result = yield postCollection.find().toArray();
             res.send(result);
         }));
+        app.post('/post', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+            const post = req.body;
+            const result = yield postCollection.insertOne(post);
+            res.send(result);
+        }));
+        app.patch('/post/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+            const post = req.body;
+            const id = req.params.id;
+            const filter = {
+                _id: new mongodb_1.ObjectId(id)
+            };
+            const updateDoc = {
+                $set: post
+            };
+            const result = yield postCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        }));
+        app.delete('/post/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+            const id = req.params.id;
+            const filter = {
+                _id: new mongodb_1.ObjectId(id)
+            };
+            const result = yield postCollection.deleteOne(filter);
+            res.send(result);
+        }));
     }
     finally {
     }

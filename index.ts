@@ -2,8 +2,9 @@ import express,{ Express, Request, Response } from  'express';
 import dotenv from 'dotenv'
 import cors from 'cors';
 
-import { MongoClient, ServerApiVersion } from 'mongodb';
+import { MongoClient, ObjectId, ServerApiVersion } from 'mongodb';
 import { runMain } from 'module';
+import { Post } from './Model/Post';
 
 const app:Express = express();
 const PORT:string|number =   process.env.PORT||5000;
@@ -28,6 +29,33 @@ const run = async ()=>{
 
         app.get('/post',async (req:Request,res:Response):Promise<void>=>{
             const result =await postCollection.find().toArray()
+            res.send(result)
+        })
+        app.post('/post',async (req:Request,res:Response):Promise<void>=>{
+            const post:Post = req.body
+            const result =await postCollection.insertOne(post)
+            res.send(result)
+        })
+        
+        app.patch('/post/:id',async (req:Request,res:Response):Promise<void>=>{
+            const post:Post = req.body
+            const id:string = req.params.id
+            const filter = {
+                _id: new ObjectId(id)
+            }
+            const updateDoc = {
+                $set:post
+            }
+            const result =await postCollection.updateOne(filter,updateDoc)
+            res.send(result)
+        })
+        
+        app.delete('/post/:id',async (req:Request,res:Response):Promise<void>=>{
+            const id:string = req.params.id
+            const filter = {
+                _id:new ObjectId(id)
+            }
+            const result =await postCollection.deleteOne(filter)
             res.send(result)
         })
     }finally{
