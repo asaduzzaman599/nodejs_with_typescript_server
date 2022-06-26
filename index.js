@@ -31,7 +31,11 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield client.connect();
         console.log("db connected");
-        
+        const postCollection = client.db('post_book').collection('post');
+        app.get('/post', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+            const result = yield postCollection.find().toArray();
+            res.send(result);
+        }));
     }
     finally {
     }

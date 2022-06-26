@@ -24,6 +24,12 @@ const run = async ()=>{
     try{
        await client.connect()
         console.log("db connected")
+        const postCollection = client.db('post_book').collection('post')
+
+        app.get('/post',async (req:Request,res:Response):Promise<void>=>{
+            const result =await postCollection.find().toArray()
+            res.send(result)
+        })
     }finally{
         
     }
